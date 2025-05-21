@@ -1,4 +1,3 @@
-# MindLink-
 
 # MindLink
 
