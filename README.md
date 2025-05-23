@@ -1,5 +1,7 @@
 
-# MindLink
+# MindLink is a web and mobile application where users record how they feel, analyze their emotions using lightweight on-device AI, and store a summary on the Starknet blockchain.
+The original content is never exposed: only a hash of the text, the emotion code, and the user's signature are saved, ensuring complete privacy and emotional traceability.
+Additionally, it optionally connects with Pragma Feeds to explore correlations between collective emotions and market events such as BTC volatility.
 
 MindLink is ......
 
