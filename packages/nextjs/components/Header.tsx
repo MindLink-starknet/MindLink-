@@ -116,70 +116,61 @@ export const Header = () => {
   ]);
 
   return (
-    <div className=" lg:static top-0 navbar min-h-0 flex-shrink-0 justify-between z-20 px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2 -mr-2">
-        <div className="lg:hidden dropdown" ref={burgerMenuRef}>
-          <label
-            tabIndex={0}
-            className={`ml-1 btn btn-ghost 
-              [@media(max-width:379px)]:!px-3 [@media(max-width:379px)]:!py-1 
-              [@media(max-width:379px)]:!h-9 [@media(max-width:379px)]:!min-h-0
-              [@media(max-width:379px)]:!w-10
-              ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-            onClick={() => {
-              setIsDrawerOpen((prevIsOpenState) => !prevIsOpenState);
-            }}
-          >
-            <Bars3Icon className="h-1/2" />
-          </label>
-          {isDrawerOpen && (
-            <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow rounded-box w-52 bg-base-100"
-              onClick={() => {
-                setIsDrawerOpen(false);
-              }}
+    <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="relative w-10 h-10 bg-gradient-to-br from-[#F5EFF5] via-[#E6D5E6] to-[#9CE0DB] rounded-xl flex items-center justify-center">
+              <Image 
+                src="/mindlink-logo.png" 
+                alt="MindLink Logo" 
+                width={28} 
+                height={28}
+                className="relative z-10"
+              />
+            </div>
+          </Link>
+
+          {/* Right Section: Navigation, Language & Connect */}
+          <div className="flex items-center space-x-8">
+            {/* Navigation Links */}
+            <Link 
+              href="/how-it-works" 
+              className="text-gray-600 hover:text-[#81638B] transition-colors"
             >
-              <HeaderMenuLinks />
-            </ul>
-          )}
+              How It Works?
+            </Link>
+            <Link 
+              href="/dashboard" 
+              className="text-gray-600 hover:text-[#81638B] transition-colors"
+            >
+              Dashboard
+            </Link>
+            <Link 
+              href="/journal" 
+              className="text-gray-600 hover:text-[#81638B] transition-colors"
+            >
+              Full Journal
+            </Link>
+
+            {/* Language Selector */}
+            <button className="flex items-center space-x-1 text-gray-600 hover:text-[#81638B] transition-colors">
+              <span className="text-sm">🌐</span>
+              <span className="text-sm font-medium">ES</span>
+            </button>
+
+            {/* Connect Wallet Button */}
+            <button 
+              className="px-4 py-2 bg-gradient-to-r from-[#81638B] to-[#5DC1B9] text-white rounded-xl hover:opacity-90 transition-opacity"
+            >
+              Connect Wallet
+            </button>
+          </div>
         </div>
-        <Link
-          href="/"
-          passHref
-          className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0"
-        >
-          <div className="flex relative w-10 h-10">
-            <Image
-              alt="SE2 logo"
-              className="cursor-pointer"
-              fill
-              src="/logo.svg"
-            />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-Stark</span>
-            <span className="text-xs">Starknet dev stack</span>
-          </div>
-        </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-          <HeaderMenuLinks />
-        </ul>
-      </div>
-      <div className="navbar-end flex-grow mr-2 gap-4">
-        {status === "connected" && !isDeployed ? (
-          <span className="bg-[#8a45fc] text-[9px] p-1 text-white">
-            Wallet Not Deployed
-          </span>
-        ) : null}
-        <CustomConnectButton />
-        {/* <FaucetButton /> */}
-        <SwitchTheme
-          className={`pointer-events-auto ${
-            isLocalNetwork ? "mb-1 lg:mb-0" : ""
-          }`}
-        />
       </div>
     </div>
   );
 };
+
+export default Header;

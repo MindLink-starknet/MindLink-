@@ -28,71 +28,52 @@ export const Footer = () => {
     targetNetwork.network === mainnet.network;
 
   return (
-    <div className="min-h-0 py-5 px-1 mb-11 lg:mb-0 bg-base-100">
-      <div>
-        <div className="fixed flex justify-between items-center w-full z-10 p-4 bottom-0 left-0 pointer-events-none">
-          <div className="flex flex-col md:flex-row gap-2 pointer-events-auto">
-            {isSepoliaNetwork && (
-              <>
-                <FaucetSepolia />
-                <BlockExplorerSepolia />
-              </>
-            )}
-            {isLocalNetwork && (
-              <>
-                <Faucet />
-              </>
-            )}
-            {isMainnetNetwork && (
-              <>
-                <BlockExplorer />
-              </>
-            )}
-            <Link
-              href={"/configure"}
-              passHref
-              className="btn btn-sm font-normal gap-1 cursor-pointer border border-[#32BAC4] shadow-none"
-            >
-              <Cog8ToothIcon className="h-4 w-4 text-[#32BAC4]" />
-              <span>Configure Contracts</span>
-            </Link>
-            {nativeCurrencyPrice > 0 && (
-              <div>
-                <div className="btn btn-sm font-normal gap-1 cursor-auto border border-[#32BAC4] shadow-none">
-                  <CurrencyDollarIcon className="h-4 w-4 text-[#32BAC4]" />
-                  <span>{nativeCurrencyPrice}</span>
-                </div>
-              </div>
-            )}
+    <div className="min-h-0 py-12 px-4 bg-[#81638B] text-white">
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Logo and Description */}
+          <div className="space-y-4">
+            <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+              <img src="/mindlink-logo.png" alt="MindLink Logo" className="w-12 h-12" />
+            </div>
+            <p className="text-lg">
+              Your private and decentralized emotional journal on Starknet.
+            </p>
+          </div>
+
+          {/* Product Links */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-[#9CE0DB]">Product</h3>
+            <ul className="space-y-2">
+              <li><Link href="/how-it-works" className="hover:text-[#9CE0DB]">How It Works?</Link></li>
+              <li><Link href="/journal" className="hover:text-[#9CE0DB]">Full Journal</Link></li>
+              <li><Link href="/dashboard" className="hover:text-[#9CE0DB]">Dashboard</Link></li>
+            </ul>
+          </div>
+
+          {/* Technology Links */}
+          <div>
+            <h3 className="text-xl font-semibold mb-4 text-[#9CE0DB]">Technology</h3>
+            <ul className="space-y-2">
+              <li>
+                <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="hover:text-[#9CE0DB]">
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="https://www.starknet.io" target="_blank" rel="noopener noreferrer" className="hover:text-[#9CE0DB]">
+                  Starknet
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
-      <div className="w-full">
-        <ul className="menu menu-horizontal w-full">
-          <div className="flex justify-center items-center gap-2 text-sm w-full">
-            <div className="text-center">
-              <a
-                href="https://github.com/Scaffold-Stark/scaffold-stark-2"
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
-                Fork me
-              </a>
-            </div>
 
-            <div className="text-center">
-              <a
-                href="https://t.me/+wO3PtlRAreo4MDI9"
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
-                Support
-              </a>
-            </div>
-          </div>
-        </ul>
+        {/* Copyright */}
+        <div className="text-center mt-8">
+          <hr className="border-white/20 mb-8" />
+          <p>© 2025 MindLink. Built with privacy by design.</p>
+        </div>
       </div>
     </div>
   );
