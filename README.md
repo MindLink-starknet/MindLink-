@@ -96,6 +96,6 @@ MindLink/
 
 ## Contributors
 
-- [@mildredbonillav](https://github.com/mildredbonillav)
-- [@sof0404](https://github.com/sof0404)
-- [@kimcascante](https://github.com/kimcascante)
+- [mildredbonillav](https://github.com/mildredbonillav)
+- [sof0404](https://github.com/sof0404)
+- [kimcascante](https://github.com/kimcascante)
