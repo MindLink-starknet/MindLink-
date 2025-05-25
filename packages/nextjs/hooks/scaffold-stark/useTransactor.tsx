@@ -134,9 +134,52 @@ export const useTransactor = (
         }
       } else if (tx != null) {
         try {
-          // First try to estimate fees
+          // First try to estimate fees with default values
+          const defaultOptions = {
+            version: constants.TRANSACTION_VERSION.V3,
+            resourceBounds: {
+              l1_gas: {
+                max_amount: "0x1000000",
+                max_price_per_unit: "0x1000000",
+              },
+              l2_gas: {
+                max_amount: "0x1000000",
+                max_price_per_unit: "0x1000000",
+              },
+            },
+            l1_data_gas: {
+              max_amount: "0x1000000",
+              max_price_per_unit: "0x1000000",
+            },
+            nonce_data_availability_mode: "L1",
+            fee_data_availability_mode: "L1",
+          };
+
+          // Create a new transaction object with the required fields
+          const txWithOptions = {
+            ...tx[0],
+            version: constants.TRANSACTION_VERSION.V3,
+            resourceBounds: {
+              l1_gas: {
+                max_amount: "0x1000000",
+                max_price_per_unit: "0x1000000",
+              },
+              l2_gas: {
+                max_amount: "0x1000000",
+                max_price_per_unit: "0x1000000",
+              },
+            },
+            l1_data_gas: {
+              max_amount: "0x1000000",
+              max_price_per_unit: "0x1000000",
+            },
+            nonce_data_availability_mode: "L1",
+            fee_data_availability_mode: "L1",
+          };
+
           const estimatedFee = await walletClient.estimateInvokeFee(
-            tx as Call[],
+            [txWithOptions] as Call[],
+            defaultOptions
           );
 
           // Use estimated fee with a safety margin (multiply by 1.5)
@@ -145,11 +188,11 @@ export const useTransactor = (
 
           // Set RPC 0.8 compatible parameters with estimated fees
           const txOptions = {
-            version: constants.TRANSACTION_VERSION.V3,
+            ...defaultOptions,
             maxFee: "0x" + maxFee.toString(16),
           };
 
-          transactionHash = (await walletClient.execute(tx, txOptions))
+          transactionHash = (await walletClient.execute([txWithOptions], txOptions))
             .transaction_hash;
         } catch (feeEstimationError) {
           console.warn(
@@ -160,27 +203,32 @@ export const useTransactor = (
           // Fallback to safe default values if estimation fails
           const txOptions = {
             version: constants.TRANSACTION_VERSION.V3,
-            // Use a reasonable maxFee value that won't exceed account balance
             maxFee: "0x1000000000",
-            // Set resource bounds for RPC 0.8 compatibility
             resourceBounds: {
               l1_gas: {
                 max_amount: "0x1000000",
-                max_price_per_unit: "0x1",
+                max_price_per_unit: "0x1000000",
               },
               l2_gas: {
                 max_amount: "0x1000000",
-                max_price_per_unit: "0x1",
+                max_price_per_unit: "0x1000000",
               },
             },
-            // Add l1_data_gas field for RPC 0.8 compatibility
             l1_data_gas: {
               max_amount: "0x1000000",
-              max_price_per_unit: "0x1",
+              max_price_per_unit: "0x1000000",
             },
+            nonce_data_availability_mode: "L1",
+            fee_data_availability_mode: "L1",
           };
 
-          transactionHash = (await walletClient.execute(tx, txOptions))
+          // Create a new transaction object with the required fields
+          const txWithOptions = {
+            ...tx[0],
+            ...txOptions,
+          };
+
+          transactionHash = (await walletClient.execute([txWithOptions], txOptions))
             .transaction_hash;
         }
       } else {
