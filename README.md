@@ -94,4 +94,8 @@ MindLink/
 
 ## 👥 Authors
 
-@all-contributors please add @mildredbonillav for code, ideas
+## Contributors
+
+- [@mildredbonillav](https://github.com/mildredbonillav)
+- [@sof0404](https://github.com/sof0404)
+- [@kimcascante](https://github.com/kimcascante)
