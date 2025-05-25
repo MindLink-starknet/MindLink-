@@ -94,6 +94,7 @@ MindLink/
 
 ## 👥 Authors
 
-- 
+- [@mildredbonillav]([https://github.com/usuario1](https://github.com/mildredbonillav))
+
 -
 -
