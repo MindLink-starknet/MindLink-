@@ -14,6 +14,7 @@ import { SwitchTheme } from "./SwitchTheme";
 import { useAccount, useNetwork, useProvider } from "@starknet-react/core";
 import { BlockIdentifier } from "starknet";
 
+
 type HeaderMenuLink = {
   label: string;
   href: string;
@@ -133,23 +134,23 @@ export const Header = () => {
           </Link>
 
           {/* Right Section: Navigation, Language & Connect */}
-          <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-4">
             {/* Navigation Links */}
             <Link 
               href="/how-it-works" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors"
+              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
             >
               How It Works?
             </Link>
             <Link 
               href="/dashboard" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors"
+              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
             >
               Dashboard
             </Link>
             <Link 
               href="/journal" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors"
+              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
             >
               Full Journal
             </Link>
@@ -160,12 +161,20 @@ export const Header = () => {
               <span className="text-sm font-medium">ES</span>
             </button>
 
-            {/* Connect Wallet Button */}
-            <button 
-              className="px-4 py-2 bg-gradient-to-r from-[#81638B] to-[#5DC1B9] text-white rounded-xl hover:opacity-90 transition-opacity"
-            >
-              Connect Wallet
-            </button>
+            {/* Wallet Connection and Theme Switch */}
+            <div className="flex items-center gap-2">
+              {status === "connected" && !isDeployed ? (
+                <span className="bg-[#8a45fc] text-[7px] px-1 py-0.5 text-white rounded-sm whitespace-nowrap">
+                  Not Deployed
+                </span>
+              ) : null}
+              <CustomConnectButton />
+              <SwitchTheme
+                className={`pointer-events-auto ${
+                  isLocalNetwork ? "mb-1 lg:mb-0" : ""
+                }`}
+              />
+            </div>
           </div>
         </div>
       </div>
