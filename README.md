@@ -96,6 +96,6 @@ MindLink/
 
 ## 👥 Authors
 
-- 
--
--
+- Kim Mora
+- Sofía Barboza
+- Mildred Bonilla
