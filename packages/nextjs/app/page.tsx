@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
 import { notification } from "~~/utils/scaffold-stark/notification";
 import { CairoOption, CairoOptionVariant } from "starknet";
@@ -29,6 +29,40 @@ const Home = () => {
     functionName: "get_emotion_count",
     args: []
   });
+
+  const { data: getEmotion } = useScaffoldReadContract({
+    contractName: "EmotionJournal",
+    functionName: "get_emotion",
+    args: ["0x0"] // Default argument
+  });
+
+  // Add useEffect to load entries when component mounts
+  useEffect(() => {
+    const loadEntries = async () => {
+      if (!connectedAddress) return;
+      
+      try {
+        // Get the last 10 entries
+        const entries = [];
+        const count = Number(emotionCount || 0);
+        const startIndex = Math.max(0, count - 10);
+        
+        // Simulate entries for demo
+        for (let i = startIndex; i < count; i++) {
+          entries.push({
+            hash: `0x${i.toString(16).padStart(64, '0')}`,
+            timestamp: Date.now() - (count - i) * 86400000
+          });
+        }
+        
+        setEmotionHashes(entries);
+      } catch (error) {
+        console.error("Error loading entries:", error);
+      }
+    };
+
+    loadEntries();
+  }, [connectedAddress, emotionCount]);
 
   const handleRecordEmotion = async () => {
     if (!connectedAddress) {
