@@ -305,45 +305,35 @@ const Home = () => {
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gradient-to-r from-[#E6D5E6] to-[#9CE0DB] py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-semibold text-[#81638B] mb-4">How It Works?</h2>
-          <p className="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
-            Your privacy is our priority. This is how we protect your emotions while analyzing them.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+      <div id="how-it-works" className="bg-gradient-to-r from-[#F5EFF5] via-[#E6D5E6] to-[#9CE0DB] py-16">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12 text-[#81638B]">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#81638B] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                1
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#81638B] mb-4">Write your emotion</h3>
-              <p className="text-gray-600">
-                Your text is analyzed locally on your device. It never leaves your browser.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Connect Your Wallet</h3>
+              <p className="text-gray-600">Connect your Starknet wallet to start recording your emotions securely.</p>
             </div>
 
             {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#5DC1B9] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                2
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#5DC1B9] mb-4">Generate a hash</h3>
-              <p className="text-gray-600">
-                We only send a cryptographic hash of your emotion, not the original text.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Write Your Emotions</h3>
+              <p className="text-gray-600">Record your daily emotions and thoughts in a private, decentralized journal.</p>
             </div>
 
             {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#81638B] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                3
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#81638B] mb-4">Sign with your wallet</h3>
-              <p className="text-gray-600">
-                Your wallet signs the hash and records it on Starknet privately and verifiably.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Track Your Progress</h3>
+              <p className="text-gray-600">View your emotional history and track your personal growth over time.</p>
             </div>
           </div>
         </div>
