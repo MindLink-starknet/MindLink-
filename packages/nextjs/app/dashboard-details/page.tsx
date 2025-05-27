@@ -65,24 +65,24 @@ const DashboardDetails = () => {
       {/* Tarjetas de métricas */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
         <div className="bg-white rounded-2xl shadow p-6 flex flex-col items-center">
-          <span className="text-3xl font-bold text-[#81638B]">{totalEntries}</span>
-          <span className="text-gray-600">Total Entries</span>
+          <span className="text-3xl font-bold text-[#81638B]">{userEntries}</span>
+          <span className="text-gray-600">Your Entries</span>
           <span className="text-xs text-gray-400 mt-2">Goal: 30 entries</span>
         </div>
         <div className="bg-white rounded-2xl shadow p-6 flex flex-col items-center">
           <span className="text-3xl font-bold text-[#5DC1B9]">{userEntries}</span>
-          <span className="text-gray-600">Your Entries</span>
+          <span className="text-gray-600">This Month</span>
           <span className="text-xs text-gray-400 mt-2">Goal: 10 entries</span>
         </div>
         <div className="bg-white rounded-2xl shadow p-6 flex flex-col items-center">
-          <span className="text-3xl font-bold text-[#81638B]">{avgWordsPerEntry}</span>
-          <span className="text-gray-600">Avg Words/Entry</span>
-          <span className="text-xs text-gray-400 mt-2">Target: 500 words</span>
+          <span className="text-3xl font-bold text-[#81638B]">{userEntries}</span>
+          <span className="text-gray-600">This Week</span>
+          <span className="text-xs text-gray-400 mt-2">Goal: 5 entries</span>
         </div>
         <div className="bg-white rounded-2xl shadow p-6 flex flex-col items-center">
-          <span className="text-3xl font-bold text-[#FFD600]">{streak}</span>
-          <span className="text-gray-600">Streak</span>
-          <span className="text-xs text-gray-400 mt-2">Best: 10 days</span>
+          <span className="text-3xl font-bold text-[#FFD600]">{userEntries}</span>
+          <span className="text-gray-600">Today</span>
+          <span className="text-xs text-gray-400 mt-2">Goal: 1 entry</span>
         </div>
       </div>
       {/* Emotional Intelligence Analytics con barra superior y tabs */}

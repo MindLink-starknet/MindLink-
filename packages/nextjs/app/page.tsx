@@ -36,15 +36,21 @@ const Home = () => {
     args: ["0x0"] // Default argument
   });
 
+  const { data: userEmotionCount } = useScaffoldReadContract({
+    contractName: "EmotionJournal",
+    functionName: "get_user_emotion_count",
+    args: [connectedAddress || "0x0"]
+  });
+
   // Add useEffect to load entries when component mounts
   useEffect(() => {
     const loadEntries = async () => {
       if (!connectedAddress) return;
       
       try {
-        // Get the last 10 entries
+        // Get the last 10 entries for the connected user
         const entries = [];
-        const count = Number(emotionCount || 0);
+        const count = Number(userEmotionCount || 0);
         const startIndex = Math.max(0, count - 10);
         
         // Simulate entries for demo
@@ -62,7 +68,7 @@ const Home = () => {
     };
 
     loadEntries();
-  }, [connectedAddress, emotionCount]);
+  }, [connectedAddress, userEmotionCount]);
 
   const handleRecordEmotion = async () => {
     if (!connectedAddress) {
@@ -197,7 +203,7 @@ const Home = () => {
                   <path d="M8 2V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M3 10H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <h3 className="text-xl font-semibold text-[#81638B]">Emotional History</h3>
+                <h3 className="text-xl font-semibold text-[#81638B]">Your Emotional History</h3>
               </div>
               <div className="text-center py-8">
                 {emotionHashes.length === 0 ? (
@@ -208,14 +214,14 @@ const Home = () => {
                     <p className="text-gray-500">
                       {isCountLoading
                         ? "Loading..."
-                        : `Total emotions recorded: ${emotionCount ? Number(emotionCount) : 0}`}
+                        : `Your total entries: ${userEmotionCount ? Number(userEmotionCount) : 0}`}
                     </p>
-                    <p className="text-gray-400 text-sm">Start today to unlock rewards</p>
+                    <p className="text-gray-400 text-sm">Start today to track your emotional journey</p>
                   </>
                 ) : (
                   <div className="space-y-4">
                     <p className="text-gray-500 mb-4">
-                      Total emotions recorded: {emotionCount ? Number(emotionCount) : 0}
+                      Your total entries: {userEmotionCount ? Number(userEmotionCount) : 0}
                     </p>
                     <div className="space-y-2">
                       {emotionHashes.map(({ hash, timestamp }, index) => (
