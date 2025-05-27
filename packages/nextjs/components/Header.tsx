@@ -143,16 +143,10 @@ export const Header = () => {
               How It Works?
             </Link>
             <Link 
-              href="/dashboard" 
+              href="/dashboard-details" 
               className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
             >
               Dashboard
-            </Link>
-            <Link 
-              href="/journal" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
-            >
-              Full Journal
             </Link>
 
             {/* Language Selector */}
