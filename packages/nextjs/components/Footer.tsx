@@ -45,9 +45,19 @@ export const Footer = () => {
           <div>
             <h3 className="text-xl font-semibold mb-4 text-[#9CE0DB]">Product</h3>
             <ul className="space-y-2">
-              <li><Link href="/how-it-works" className="hover:text-[#9CE0DB]">How It Works?</Link></li>
-              <li><Link href="/journal" className="hover:text-[#9CE0DB]">Full Journal</Link></li>
-              <li><Link href="/dashboard" className="hover:text-[#9CE0DB]">Dashboard</Link></li>
+              <li>
+                <a 
+                  href="#how-it-works" 
+                  className="hover:text-[#9CE0DB] cursor-pointer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  How It Works
+                </a>
+              </li>
+              <li><Link href="/dashboard-details" className="hover:text-[#9CE0DB]">Dashboard</Link></li>
             </ul>
           </div>
 
@@ -56,7 +66,7 @@ export const Footer = () => {
             <h3 className="text-xl font-semibold mb-4 text-[#9CE0DB]">Technology</h3>
             <ul className="space-y-2">
               <li>
-                <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer" className="hover:text-[#9CE0DB]">
+                <a href="https://github.com/MindLink-starknet/MindLink-" target="_blank" rel="noopener noreferrer" className="hover:text-[#9CE0DB]">
                   GitHub
                 </a>
               </li>

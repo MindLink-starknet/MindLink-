@@ -1,6 +1,118 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect } from "react";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
+import { notification } from "~~/utils/scaffold-stark/notification";
+import { CairoOption, CairoOptionVariant } from "starknet";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-stark/useScaffoldReadContract";
+import { useAccount } from "~~/hooks/useAccount";
 
 const Home = () => {
+  const [emotion, setEmotion] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [emotionHashes, setEmotionHashes] = useState<Array<{ hash: string, timestamp: number }>>([]);
+  const { address: connectedAddress } = useAccount();
+
+  const { sendAsync: recordEmotion } = useScaffoldWriteContract({
+    contractName: "EmotionJournal",
+    functionName: "record_emotion",
+    args: [
+      "",
+      "0x0",
+      new CairoOption<bigint>(CairoOptionVariant.None)
+    ]
+  });
+
+  const { data: emotionCount, isLoading: isCountLoading } = useScaffoldReadContract({
+    contractName: "EmotionJournal",
+    functionName: "get_emotion_count",
+    args: []
+  });
+
+  const { data: getEmotion } = useScaffoldReadContract({
+    contractName: "EmotionJournal",
+    functionName: "get_emotion",
+    args: ["0x0"] // Default argument
+  });
+
+  const { data: userEmotionCount } = useScaffoldReadContract({
+    contractName: "EmotionJournal",
+    functionName: "get_user_emotion_count",
+    args: [connectedAddress || "0x0"]
+  });
+
+  // Add useEffect to load entries when component mounts
+  useEffect(() => {
+    const loadEntries = async () => {
+      if (!connectedAddress) return;
+      
+      try {
+        // Get the last 10 entries for the connected user
+        const entries = [];
+        const count = Number(userEmotionCount || 0);
+        const startIndex = Math.max(0, count - 10);
+        
+        // Simulate entries for demo
+        for (let i = startIndex; i < count; i++) {
+          entries.push({
+            hash: `0x${i.toString(16).padStart(64, '0')}`,
+            timestamp: Date.now() - (count - i) * 86400000
+          });
+        }
+        
+        setEmotionHashes(entries);
+      } catch (error) {
+        console.error("Error loading entries:", error);
+      }
+    };
+
+    loadEntries();
+  }, [connectedAddress, userEmotionCount]);
+
+  const handleRecordEmotion = async () => {
+    if (!connectedAddress) {
+      notification.error("Please connect your wallet first");
+      return;
+    }
+
+    if (!emotion.trim()) {
+      notification.error("Please write something before recording");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      // Pass the raw string as ByteArray
+      const emotionHash = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(emotion));
+      const emotionHashHex = Array.from(new Uint8Array(emotionHash))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+
+      await recordEmotion({
+        args: [
+          emotion,
+          `0x${emotionHashHex}`,
+          new CairoOption<bigint>(CairoOptionVariant.None)
+        ]
+      });
+
+      // Add the hash to our list
+      setEmotionHashes(prev => [...prev, { 
+        hash: `0x${emotionHashHex}`, 
+        timestamp: Date.now() 
+      }]);
+
+      notification.success("Emotion recorded successfully!");
+      setEmotion("");
+    } catch (error) {
+      console.error("Error recording emotion:", error);
+      notification.error("Failed to record emotion");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -54,21 +166,31 @@ const Home = () => {
               <div className="p-4">
                 <textarea
                   className="w-full h-28 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#9CE0DB] resize-none bg-white"
-                  placeholder="Write about your emotions, thoughts, or how your day has been..."
+                  placeholder={connectedAddress ? "Write about your emotions, thoughts, or how your day has been..." : "Connect your wallet to start recording emotions"}
+                  value={emotion}
+                  onChange={(e) => setEmotion(e.target.value)}
+                  disabled={!connectedAddress}
                 ></textarea>
                 <div className="mt-2 text-gray-500">
-                  <span>0 words</span>
+                  <span>{emotion.split(/\s+/).filter(Boolean).length} words</span>
                 </div>
-                <button className="w-full mt-3 py-2.5 bg-gradient-to-r from-[#81638B] to-[#5DC1B9] text-white rounded-xl font-medium flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M5 12H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  Record entry
+                <button 
+                  className="w-full mt-3 py-2.5 bg-gradient-to-r from-[#81638B] to-[#5DC1B9] text-white rounded-xl font-medium flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleRecordEmotion}
+                  disabled={isLoading || !emotion.trim() || !connectedAddress}
+                >
+                  {isLoading ? (
+                    <span className="loading loading-spinner loading-sm"></span>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 5L19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M5 12H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      {connectedAddress ? "Record entry" : "Connect wallet to record"}
+                    </>
+                  )}
                 </button>
-                <div className="mt-3 text-center">
-                  <p className="text-gray-500">Connect your wallet to record entries</p>
-                </div>
               </div>
             </div>
 
@@ -81,14 +203,40 @@ const Home = () => {
                   <path d="M8 2V6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   <path d="M3 10H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <h3 className="text-xl font-semibold text-[#81638B]">Emotional History</h3>
+                <h3 className="text-xl font-semibold text-[#81638B]">Your Emotional History</h3>
               </div>
               <div className="text-center py-8">
-                <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <p className="text-gray-500">You haven't recorded any emotions yet</p>
-                <p className="text-gray-400 text-sm">Start today to unlock rewards</p>
+                {emotionHashes.length === 0 ? (
+                  <>
+                    <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    <p className="text-gray-500">
+                      {isCountLoading
+                        ? "Loading..."
+                        : `Your total entries: ${userEmotionCount ? Number(userEmotionCount) : 0}`}
+                    </p>
+                    <p className="text-gray-400 text-sm">Start today to track your emotional journey</p>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <p className="text-gray-500 mb-4">
+                      Your total entries: {userEmotionCount ? Number(userEmotionCount) : 0}
+                    </p>
+                    <div className="space-y-2">
+                      {emotionHashes.map(({ hash, timestamp }, index) => (
+                        <div key={hash} className="bg-gray-50 p-3 rounded-lg">
+                          <p className="text-sm font-mono text-gray-600 break-all">
+                            Hash: {hash}
+                          </p>
+                          <p className="text-xs text-gray-400 mt-1">
+                            {new Date(timestamp).toLocaleString()}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -163,45 +311,35 @@ const Home = () => {
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-gradient-to-r from-[#E6D5E6] to-[#9CE0DB] py-20">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-semibold text-[#81638B] mb-4">How It Works?</h2>
-          <p className="text-xl text-gray-600 mb-16 max-w-3xl mx-auto">
-            Your privacy is our priority. This is how we protect your emotions while analyzing them.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+      <div id="how-it-works" className="bg-gradient-to-r from-[#F5EFF5] via-[#E6D5E6] to-[#9CE0DB] py-16">
+        <div className="w-full max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12 text-[#81638B]">How It Works</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Step 1 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#81638B] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                1
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">1</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#81638B] mb-4">Write your emotion</h3>
-              <p className="text-gray-600">
-                Your text is analyzed locally on your device. It never leaves your browser.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Connect Your Wallet</h3>
+              <p className="text-gray-600">Connect your Starknet wallet to start recording your emotions securely.</p>
             </div>
 
             {/* Step 2 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#5DC1B9] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                2
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">2</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#5DC1B9] mb-4">Generate a hash</h3>
-              <p className="text-gray-600">
-                We only send a cryptographic hash of your emotion, not the original text.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Write Your Emotions</h3>
+              <p className="text-gray-600">Record your daily emotions and thoughts in a private, decentralized journal.</p>
             </div>
 
             {/* Step 3 */}
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#81638B] rounded-full flex items-center justify-center text-white text-2xl font-semibold mx-auto mb-6">
-                3
+            <div className="bg-white rounded-2xl p-6 shadow-lg">
+              <div className="w-12 h-12 bg-[#9CE0DB] rounded-full flex items-center justify-center mb-4">
+                <span className="text-2xl font-bold text-white">3</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#81638B] mb-4">Sign with your wallet</h3>
-              <p className="text-gray-600">
-                Your wallet signs the hash and records it on Starknet privately and verifiably.
-              </p>
+              <h3 className="text-xl font-semibold mb-3 text-[#81638B]">Track Your Progress</h3>
+              <p className="text-gray-600">View your emotional history and track your personal growth over time.</p>
             </div>
           </div>
         </div>

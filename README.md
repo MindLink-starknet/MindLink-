@@ -1,7 +1,6 @@
+# MindLink is a Web3 emotional journaling web app powered by Starknet, designed to protect users' emotional privacy while encouraging healthy mental habits.
 
-# MindLink is a Web3 emotional journaling web app powered by Starknet, designed to protect users’ emotional privacy while encouraging healthy mental habits.
-
-Users freely write about how they feel. A lightweight AI running locally in the browser detects the emotional tone. The app never stores or sends the original text. Instead, it stores a hash of the text, an emotion code, and the user’s signature on Starknet — ensuring privacy, data ownership, and emotional traceability.
+Users freely write about how they feel. A lightweight AI running locally in the browser detects the emotional tone. The app never stores or sends the original text. Instead, it stores a hash of the text, an emotion code, and the user's signature on Starknet — ensuring privacy, data ownership, and emotional traceability.
 
 To motivate consistent journaling, users who complete a 30-day streak are rewarded with NFTs representing their emotional journey.
 

@@ -136,23 +136,21 @@ export const Header = () => {
           {/* Right Section: Navigation, Language & Connect */}
           <div className="flex items-center space-x-4">
             {/* Navigation Links */}
-            <Link 
-              href="/how-it-works" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
+            <a 
+              href="#how-it-works" 
+              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
-              How It Works?
-            </Link>
+              How It Works
+            </a>
             <Link 
-              href="/dashboard" 
+              href="/dashboard-details" 
               className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
             >
               Dashboard
-            </Link>
-            <Link 
-              href="/journal" 
-              className="text-gray-600 hover:text-[#81638B] transition-colors text-sm"
-            >
-              Full Journal
             </Link>
 
             {/* Language Selector */}
